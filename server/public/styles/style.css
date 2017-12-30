@@ -78,3 +78,17 @@ li a:hover {
   text-decoration: underline;
   color: #eee;
 }
+
+
+/* Drew started here */
+
+.front {
+  background-color: #8B6A37;
+  height: 100px;
+  margin: 5px;
+  border-radius: 5px;
+}
+
+.lightBrown {
+  background-color: #BD9F72;
+}
