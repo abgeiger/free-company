@@ -15,16 +15,28 @@ CREATE TABLE "faction" (
   "name" VARCHAR(80) NOT NULL
 );
 
+CREATE TABLE "regiment_template" (
+  "id" SERIAL PRIMARY KEY,
+  "front" VARCHAR(80),
+  "power" INT,
+  "startingPower" INT,
+  "morale" INT,
+  "morale_ratio" INT,
+  "is_friendly" BOOLEAN,
+  "faction_id" INT REFERENCES faction,
+  "game_id" INT REFERENCES game
+);
+
 CREATE TABLE "regiment" (
   "id" SERIAL PRIMARY KEY,
   "front" VARCHAR(80),
   "power" INT,
   "startingPower" INT,
   "morale" INT,
-  "moraleRation" INT,
+  "morale_ratio" INT,
   "is_friendly" BOOLEAN,
   "faction_id" INT REFERENCES faction,
-  "game_id" INT REFERENCES game
+  "game_id" INT NOT NULL REFERENCES game
 );
 
 CREATE TABLE "event" (
