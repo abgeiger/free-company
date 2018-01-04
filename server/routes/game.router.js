@@ -34,27 +34,24 @@ router.post('/new', function (req, res) {
                                 console.log('error', errorMakingDatabaseQuery);
                                 res.sendStatus(500);
                                 } else {
-                                    res.send(result.rows);
-                                    
+                                    var regimentArray = result.rows;
+                                    var newRegiment = [];
+                                    var newRegimentsArray = [];
+                                    for (var i = 0; i < regimentArray.length; i++) {
+                                        newRegiment.push(regimentArray[i].front);
+                                        newRegiment.push(regimentArray[i].power);
+                                        newRegiment.push(regimentArray[i].startingPower);
+                                        newRegiment.push(regimentArray[i].morale);
+                                        newRegiment.push(regimentArray[i].morale_ratio);
+                                        newRegiment.push(regimentArray[i].is_friendly);
+                                        newRegiment.push(regimentArray[i].faction_id);
+                                        newRegiment.push(gameId);
 
-                                    // post new regiments
-                                    // pool.connect(function (errorConnectingToDatabase, client, done) {
-                                    //     if (errorConnectingToDatabase) {
-                                    //     console.log('error', errorConnectingToDatabase);
-                                    //     res.sendStatus(500);
-                                    //     } else {
-                                    //         var gameId = req.query.id;
-                                    //         client.query(`;`, [userId], function (errorMakingDatabaseQuery, result) {
-                                    //             done();
-                                    //             if (errorMakingDatabaseQuery) {
-                                    //             console.log('error', errorMakingDatabaseQuery);
-                                    //             res.sendStatus(500);
-                                    //             } else {
-                                    //             res.send(result.rows);
-                                    //             }
-                                    //         });
-                                    //     }
-                                    // }); // end post new regiments
+                                        newRegimentsArray.push(newRegiment);
+                                    }
+                                    var index = 0;
+                                    var maxIndex = newRegimentsArray.length;
+                                    postNewRegiment(newRegimentsArray, index, maxIndex);
                                 }
                             });
                         }
@@ -64,5 +61,31 @@ router.post('/new', function (req, res) {
         }
     }); // end add new game
 });
+
+function postNewRegiment(newRegimentsArray, index, maxIndex) {
+    if (index < maxIndex) {
+        var newRegiment;
+        pool.connect(function (errorConnectingToDatabase, client, done) {
+            if (errorConnectingToDatabase) {
+            console.log('error', errorConnectingToDatabase);
+            res.sendStatus(500);
+            } else {client.query(`INSERT INTO regiment 
+                            (front, power, startingPower, morale, morale_ratio, is_friendly, faction_id, game_id)
+                            VALUES;`, newRegiment, function (errorMakingDatabaseQuery, result) {
+                    done();
+                    if (errorMakingDatabaseQuery) {
+                    console.log('error', errorMakingDatabaseQuery);
+                    res.sendStatus(500);
+                    } else {
+                        index++;
+                        postNewRegiment(newRegimentsArray, index, maxIndex);
+                    }
+                });
+            }
+        });
+    } else {
+        res.send(newRegimentsArray);
+    }
+}
 
 module.exports = router;
