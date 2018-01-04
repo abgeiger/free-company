@@ -32,7 +32,7 @@ app.use(passport.session());
 app.use('/register', registerRouter);
 app.use('/user', userRouter);
 app.use('/game', game);
-app.use('/regiment', regiment);
+app.use('/regiments', regiment);
 
 // Catch all bucket, must be last!
 app.use('/', indexRouter);
