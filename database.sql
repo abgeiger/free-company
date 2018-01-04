@@ -55,3 +55,27 @@ CREATE TABLE "message_decision" (
   "event_id" INT REFERENCES event,
   "decision_id" INT REFERENCES decision
 );
+
+INSERT INTO faction (name)
+VALUES ('hoplite');
+
+INSERT INTO faction (name)
+VALUES ('Hoard');
+
+INSERT INTO regiment (front, power, starting_power, morale, morale_ratio, is_friendly, faction_id)
+VALUES ('left', 100, 100, 30, 0.3, true, 1);
+
+INSERT INTO regiment (front, power, starting_power, morale, morale_ratio, is_friendly, faction_id)
+VALUES ('center', 100, 100, 30, 0.3, true, 1);
+
+INSERT INTO regiment (front, power, starting_power, morale, morale_ratio, is_friendly, faction_id)
+VALUES ('right', 100, 100, 30, 0.3, true, 1);
+
+INSERT INTO regiment (front, power, starting_power, morale, morale_ratio, is_friendly, faction_id)
+VALUES ('left', 140, 140, 21, 0.15, false, 2);
+
+INSERT INTO regiment (front, power, starting_power, morale, morale_ratio, is_friendly, faction_id)
+VALUES ('center', 140, 140, 21, 0.15, false, 2);
+
+INSERT INTO regiment (front, power, starting_power, morale, morale_ratio, is_friendly, faction_id)
+VALUES ('right', 140, 140, 21, 0.15, false, 2);
