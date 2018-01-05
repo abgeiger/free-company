@@ -5,21 +5,21 @@ CREATE TABLE "users" (
 );
 
 CREATE TABLE "game" (
-  "id" SERIAL PRIMARY KEY,
+  "game_id" SERIAL PRIMARY KEY,
   "round" INT NOT NULL,
   "user_id" INT NOT NULL REFERENCES users
 );
 
 CREATE TABLE "faction" (
-  "id" SERIAL PRIMARY KEY,
+  "faction_id" SERIAL PRIMARY KEY,
   "name" VARCHAR(80) NOT NULL
 );
 
 CREATE TABLE "regiment_template" (
-  "id" SERIAL PRIMARY KEY,
+  "regiment_template_id" SERIAL PRIMARY KEY,
   "front" VARCHAR(80),
   "power" INT,
-  "startingPower" INT,
+  "starting_power" INT,
   "morale" INT,
   "morale_ratio" INT,
   "is_friendly" BOOLEAN,
@@ -28,10 +28,10 @@ CREATE TABLE "regiment_template" (
 );
 
 CREATE TABLE "regiment" (
-  "id" SERIAL PRIMARY KEY,
+  "regiment_id" SERIAL PRIMARY KEY,
   "front" VARCHAR(80),
   "power" INT,
-  "startingPower" INT,
+  "starting_power" INT,
   "morale" INT,
   "morale_ratio" INT,
   "is_friendly" BOOLEAN,
@@ -40,7 +40,7 @@ CREATE TABLE "regiment" (
 );
 
 CREATE TABLE "event" (
-  "id" SERIAL PRIMARY KEY,
+  "event_id" SERIAL PRIMARY KEY,
   "name" VARCHAR(200),
   "trigger" VARCHAR(80),
   "round" INT,
@@ -48,14 +48,14 @@ CREATE TABLE "event" (
 );
 
 CREATE TABLE "message" (
-  "id" SERIAL PRIMARY KEY,
+  "message_id" SERIAL PRIMARY KEY,
   "name" VARCHAR(200),
   "text" VARCHAR(8000),
   "event_id" INT REFERENCES event
 );
 
 CREATE TABLE "decision" (
-  "id" SERIAL PRIMARY KEY,
+  "decision_id" SERIAL PRIMARY KEY,
   "name" VARCHAR(200),
   "type" VARCHAR(200),
   "value" INT,
@@ -63,31 +63,27 @@ CREATE TABLE "decision" (
 );
 
 CREATE TABLE "message_decision" (
-  "id" SERIAL PRIMARY KEY,
+  "message_decision_id" SERIAL PRIMARY KEY,
   "event_id" INT REFERENCES event,
   "decision_id" INT REFERENCES decision
 );
 
 INSERT INTO faction (name)
-VALUES ('hoplite');
+VALUES ('hoplite'),
+('Hoard');
 
-INSERT INTO faction (name)
-VALUES ('Hoard');
+INSERT INTO regiment_template (front, power, starting_power, morale, morale_ratio, is_friendly, faction_id)
+VALUES ('left', 100, 100, 30, 0.3, true, 1),
+('center', 100, 100, 30, 0.3, true, 1),
+('right', 100, 100, 30, 0.3, true, 1),
+('left', 140, 140, 21, 0.15, false, 2),
+('center', 140, 140, 21, 0.15, false, 2),
+('right', 140, 140, 21, 0.15, false, 2);
 
-INSERT INTO regiment (front, power, starting_power, morale, morale_ratio, is_friendly, faction_id)
-VALUES ('left', 100, 100, 30, 0.3, true, 1);
-
-INSERT INTO regiment (front, power, starting_power, morale, morale_ratio, is_friendly, faction_id)
-VALUES ('center', 100, 100, 30, 0.3, true, 1);
-
-INSERT INTO regiment (front, power, starting_power, morale, morale_ratio, is_friendly, faction_id)
-VALUES ('right', 100, 100, 30, 0.3, true, 1);
-
-INSERT INTO regiment (front, power, starting_power, morale, morale_ratio, is_friendly, faction_id)
-VALUES ('left', 140, 140, 21, 0.15, false, 2);
-
-INSERT INTO regiment (front, power, starting_power, morale, morale_ratio, is_friendly, faction_id)
-VALUES ('center', 140, 140, 21, 0.15, false, 2);
-
-INSERT INTO regiment (front, power, starting_power, morale, morale_ratio, is_friendly, faction_id)
-VALUES ('right', 140, 140, 21, 0.15, false, 2);
+INSERT INTO regiment (front, power, starting_power, morale, morale_ratio, is_friendly, faction_id, game_id)
+VALUES ('left', 100, 100, 30, 0.3, true, 1, 1),
+('center', 100, 100, 30, 0.3, true, 1, 1),
+('right', 100, 100, 30, 0.3, true, 1, 1),
+('left', 140, 140, 21, 0.15, false, 2, 1),
+('center', 140, 140, 21, 0.15, false, 2, 1),
+('right', 140, 140, 21, 0.15, false, 2, 1);
