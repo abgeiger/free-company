@@ -4,6 +4,7 @@ myApp.service('BattleService', function ($http, $location) {
   self.testMessage = 'Test test battle test';
 
   self.regiments = { list: [] };
+  self.data = { list: [] };
 
   // // get request for regiments in the current game
   // self.getRegiments = function (gameId) {
@@ -24,4 +25,16 @@ myApp.service('BattleService', function ($http, $location) {
       console.log('new game result', response.data);
     });
   };
+
+  self.nextRound = function () {
+    $http({
+      method: 'GET',
+      url: '/game/nextRound'
+    }).then(function (response) {
+      console.log('next round result', response.data);
+      self.data.list = response.data;
+    });
+  };
+
+  self.nextRound();
 });
