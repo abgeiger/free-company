@@ -89,6 +89,8 @@ li a:hover {
   border-radius: 5px;
 }
 
-.lightBrown {
+.page-background {
   background-color: #BD9F72;
+  height: 2000px;
+  padding: 50px;
 }
