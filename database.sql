@@ -1,3 +1,5 @@
+-- startup commands
+
 CREATE TABLE "users" (
   "id" serial primary key,
   "username" varchar(80) not null UNIQUE,
@@ -87,3 +89,29 @@ VALUES ('left', 100, 100, 30, 0.3, true, 1, 1),
 ('left', 140, 140, 21, 0.15, false, 2, 1),
 ('center', 140, 140, 21, 0.15, false, 2, 1),
 ('right', 140, 140, 21, 0.15, false, 2, 1);
+
+-- working commands
+
+WITH new_game AS (
+	INSERT INTO game (round, user_id)
+	VALUES (0, 1)
+	RETURNING game_id
+)
+INSERT INTO regiment (front, power, starting_power, morale, morale_ratio, is_friendly, faction_id, game_id)
+SELECT regiment_template.front, regiment_template.power, regiment_template.starting_power, regiment_template.morale, regiment_template.morale_ratio, regiment_template.is_friendly, regiment_template.faction_id, new_game.game_id
+FROM regiment_template, new_game;
+
+UPDATE regiment
+SET power=100, morale=30
+WHERE is_friendly=true;
+
+UPDATE regiment
+SET power=140, morale=21
+WHERE is_friendly=false;
+
+UPDATE regiment
+SET power = 95, morale = 25
+WHERE game_id = 1
+    AND front = 'left'
+    AND is_friendly = true
+RETURNING *;
