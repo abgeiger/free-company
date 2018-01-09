@@ -22,7 +22,7 @@ myApp.service('BattleService', function ($http, $location) {
       method: 'POST',
       url: '/game/new'
     }).then(function (response) {
-      console.log('new game result', response.data);
+      console.log('new game response:', response.data);
     });
   };
 
@@ -31,8 +31,8 @@ myApp.service('BattleService', function ($http, $location) {
       method: 'GET',
       url: '/game/nextRound'
     }).then(function (response) {
-      console.log('next round result', response.data);
-      self.data.list = response.data;
+      console.log('next round result', response);
+      // self.data.list = response.data;
     });
   };
 
