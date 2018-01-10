@@ -31,7 +31,8 @@ router.post('/new', function (req, res) {
 });
 
 router.get('/nextRound', function (req, res) {
-    updateRegiments(req, res);    
+    roundPlusOne(req, res);
+    updateRegiments(req, res);
 }); // end nextRound()
 
 function updateRegiments(req, res) {
@@ -40,10 +41,18 @@ function updateRegiments(req, res) {
         console.log('error', errorConnectingToDatabase);
         res.sendStatus(500);
         } else {
-            client.query(`SELECT * FROM game
-                        JOIN regiment
-                            ON game.game_id = regiment.game_id
-                        WHERE game.game_id = 1;`, function (errorMakingDatabaseQuery, result) {
+            var userId = req.user.id;
+            client.query(`WITH last_game AS (
+                            SELECT game.game_id FROM users
+                            JOIN game
+                                ON users.id = game.user_id
+                            WHERE users.id = $1
+                            ORDER BY game.game_id DESC
+                            LIMIT 1
+                        )
+                        SELECT * 
+                        FROM last_game lg
+                            JOIN regiment r ON lg.game_id = r.game_id;`,[userId], function (errorMakingDatabaseQuery, result) {
                 done();
                 if (errorMakingDatabaseQuery) {
                 console.log('error', errorMakingDatabaseQuery);
@@ -187,6 +196,19 @@ function dice(numberOfSides, numberOfDice) {
         result += Math.floor(Math.random() * (numberOfSides) + 1);
     }
     return result;
+}
+
+function roundPlusOne(req, res) {
+    pool.connect(function (errorConnectingToDatabase, client, done) {
+        if (errorConnectingToDatabase) {
+        console.log('error', errorConnectingToDatabase);
+        res.sendStatus(500);
+        } else {
+            client.query(`UPDATE game
+                        SET round=round+1
+                        WHERE game_id=1;`);
+        }
+    });
 }
 
 // var exampleArray = [{"game_id":1,"round":0,"user_id":1,"regiment_id":7,"front":"left","power":100,"starting_power":100,"morale":30,"morale_ratio":0,"is_friendly":true,"faction_id":1},{"game_id":1,"round":0,"user_id":1,"regiment_id":8,"front":"center","power":100,"starting_power":100,"morale":30,"morale_ratio":0,"is_friendly":true,"faction_id":1},{"game_id":1,"round":0,"user_id":1,"regiment_id":9,"front":"right","power":100,"starting_power":100,"morale":30,"morale_ratio":0,"is_friendly":true,"faction_id":1},{"game_id":1,"round":0,"user_id":1,"regiment_id":10,"front":"left","power":140,"starting_power":140,"morale":21,"morale_ratio":0,"is_friendly":false,"faction_id":2},{"game_id":1,"round":0,"user_id":1,"regiment_id":11,"front":"center","power":140,"starting_power":140,"morale":21,"morale_ratio":0,"is_friendly":false,"faction_id":2},{"game_id":1,"round":0,"user_id":1,"regiment_id":12,"front":"right","power":140,"starting_power":140,"morale":21,"morale_ratio":0,"is_friendly":false,"faction_id":2}]
