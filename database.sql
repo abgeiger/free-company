@@ -1,7 +1,7 @@
 -- startup commands
 
 CREATE TABLE "users" (
-  "id" serial primary key,
+  "user_id" serial primary key,
   "username" varchar(80) not null UNIQUE,
   "password" varchar(240) not null
 );
@@ -11,6 +11,9 @@ CREATE TABLE "game" (
   "round" INT NOT NULL,
   "user_id" INT NOT NULL REFERENCES users
 );
+
+ALTER TABLE game
+	ADD "finished" BOOLEAN DEFAULT false;
 
 CREATE TABLE "faction" (
   "faction_id" SERIAL PRIMARY KEY,
@@ -29,6 +32,12 @@ CREATE TABLE "regiment_template" (
   "game_id" INT REFERENCES game
 );
 
+ALTER TABLE regiment_template
+	ADD "status" VARCHAR(100) DEFAULT 'fighting';
+	
+ALTER TABLE regiment_template
+	ADD "current_event_trigger" VARCHAR(80) DEFAULT '';
+
 CREATE TABLE "regiment" (
   "regiment_id" SERIAL PRIMARY KEY,
   "front" VARCHAR(80),
@@ -41,12 +50,24 @@ CREATE TABLE "regiment" (
   "game_id" INT NOT NULL REFERENCES game
 );
 
+ALTER TABLE regiment
+	ADD "status" VARCHAR(100) DEFAULT 'fighting';
+	
+ALTER TABLE regiment
+	ADD "current_event_trigger" VARCHAR(80) DEFAULT '';
+
 CREATE TABLE "event" (
   "event_id" SERIAL PRIMARY KEY,
   "name" VARCHAR(200),
   "trigger" VARCHAR(80),
   "round" INT,
   "game_id" INT REFERENCES game
+);
+
+CREATE TABLE "regiment_event" (
+  "regiment_event_id" SERIAL PRIMARY KEY,
+  "regiment_id" INT REFERENCES regiment,
+  "event_id" INT REFERENCES event
 );
 
 CREATE TABLE "message" (
@@ -70,8 +91,12 @@ CREATE TABLE "message_decision" (
   "decision_id" INT REFERENCES decision
 );
 
+
+
+
+
 INSERT INTO faction (name)
-VALUES ('hoplite'),
+VALUES ('Hoplite'),
 ('Hoard');
 
 INSERT INTO regiment_template (front, power, starting_power, morale, morale_ratio, is_friendly, faction_id)
@@ -82,36 +107,26 @@ VALUES ('left', 100, 100, 30, 0.3, true, 1),
 ('center', 140, 140, 21, 0.15, false, 2),
 ('right', 140, 140, 21, 0.15, false, 2);
 
-INSERT INTO regiment (front, power, starting_power, morale, morale_ratio, is_friendly, faction_id, game_id)
-VALUES ('left', 100, 100, 30, 0.3, true, 1, 1),
-('center', 100, 100, 30, 0.3, true, 1, 1),
-('right', 100, 100, 30, 0.3, true, 1, 1),
-('left', 140, 140, 21, 0.15, false, 2, 1),
-('center', 140, 140, 21, 0.15, false, 2, 1),
-('right', 140, 140, 21, 0.15, false, 2, 1);
+INSERT INTO event ("trigger")
+VALUES ('mutual destruction'),
+('friendly destruction'),
+('enemy destruction'),
+('mutual break'),
+('friendly break'),
+('enemy break');
 
--- working commands
+INSERT INTO regiment_event (regiment_id, event_id)
+VALUES ('mutual destruction'),
+('friendly destruction'),
+('enemy destruction'),
+('mutual break'),
+('friendly break'),
+('enemy break');
 
-WITH new_game AS (
-	INSERT INTO game (round, user_id)
-	VALUES (0, 1)
-	RETURNING game_id
-)
-INSERT INTO regiment (front, power, starting_power, morale, morale_ratio, is_friendly, faction_id, game_id)
-SELECT regiment_template.front, regiment_template.power, regiment_template.starting_power, regiment_template.morale, regiment_template.morale_ratio, regiment_template.is_friendly, regiment_template.faction_id, new_game.game_id
-FROM regiment_template, new_game;
-
-UPDATE regiment
-SET power=100, morale=30
-WHERE is_friendly=true;
-
-UPDATE regiment
-SET power=140, morale=21
-WHERE is_friendly=false;
-
-UPDATE regiment
-SET power = 95, morale = 25
-WHERE game_id = 1
-    AND front = 'left'
-    AND is_friendly = true
-RETURNING *;
+INSERT INTO message (text, event_id)
+VALUES ('There are no survivors on either side.', 1),
+('Our force has been wiped out.', 2),
+('The enemy has been annihilated!', 3),
+('Both sides have broken.', 4),
+('Our men have disgracefully broken rank.', 5),
+('The enemy has been driven back!', 6);

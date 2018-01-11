@@ -1,10 +1,9 @@
 myApp.service('BattleService', function ($http, $location) {
   console.log('BattleService Loaded');
   var self = this;
-  self.testMessage = 'Test test battle test';
 
   self.regiments = { list: [] };
-  self.data = { list: [] };
+  self.messages = { list: [] };
 
   // // get request for regiments in the current game
   // self.getRegiments = function (gameId) {
@@ -22,7 +21,7 @@ myApp.service('BattleService', function ($http, $location) {
       method: 'POST',
       url: '/game/new'
     }).then(function (response) {
-      console.log('new game response:', response.data);
+      console.log('new game response:', response);
     });
   };
 
@@ -32,7 +31,20 @@ myApp.service('BattleService', function ($http, $location) {
       url: '/game/nextRound'
     }).then(function (response) {
       console.log('next round result', response);
-      // self.data.list = response.data;
+      // self.regiments.list.push(response.data[0].rows[0]);
+      var newRegiments = [];
+      for (var i = 0; i < response.data.length; i++) {
+        newRegiments.push(response.data[i].rows[0]);
+      }
+      self.regiments.list = newRegiments;
+
+      var newMessages = [];
+      for (var i = 0; i < response.data.length; i++) {
+        if (response.data[i].rows[0].text) {
+          newMessages.push(response.data[i].rows[0].text);
+        }
+      }
+      self.messages.list = newMessages;
     });
   };
 

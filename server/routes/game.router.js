@@ -43,16 +43,13 @@ function updateRegiments(req, res) {
         } else {
             var userId = req.user.id;
             client.query(`WITH last_game AS (
-                            SELECT game.game_id FROM users
-                            JOIN game
-                                ON users.id = game.user_id
-                            WHERE users.id = $1
+                            SELECT game.game_id FROM game
+                            WHERE user_id = $1
                             ORDER BY game.game_id DESC
                             LIMIT 1
                         )
-                        SELECT * 
-                        FROM last_game lg
-                            JOIN regiment r ON lg.game_id = r.game_id;`,[userId], function (errorMakingDatabaseQuery, result) {
+                        SELECT * FROM last_game lg
+                        JOIN regiment r ON lg.game_id = r.game_id;`,[userId], function (errorMakingDatabaseQuery, result) {
                 done();
                 if (errorMakingDatabaseQuery) {
                 console.log('error', errorMakingDatabaseQuery);
@@ -61,58 +58,88 @@ function updateRegiments(req, res) {
                     var originalRegiments = result.rows;
                     var updatedRegiments = combat(originalRegiments);
 
-                    var regimentPromise0 = client.query(`UPDATE regiment
-                                                        SET power = $1, morale = $2
-                                                        WHERE game_id = $3
-                                                            AND front = $4
-                                                            AND is_friendly = $5
-                                                        RETURNING *;`, [updatedRegiments[0].power, updatedRegiments[0].morale, 
-                        updatedRegiments[0].game_id,updatedRegiments[0].front, updatedRegiments[0].is_friendly]);
+                    var regimentPromise0 = client.query(`WITH updated_regiment AS (
+                                                            UPDATE regiment
+                                                            SET power = $1, morale = $2, current_event_trigger = $3
+                                                            WHERE regiment_id = $4
+                                                            RETURNING regiment.*
+                                                        )
+                                                        SELECT * FROM game
+                                                        JOIN updated_regiment ON updated_regiment.game_id = game.game_id
+                                                        LEFT JOIN event ON event.trigger = updated_regiment.current_event_trigger
+                                                        LEFT JOIN message ON message.event_id = event.event_id;`, [updatedRegiments[0].power, 
+                                                        updatedRegiments[0].morale, updatedRegiments[0].current_event_trigger, 
+                                                        updatedRegiments[0].regiment_id]);
 
-                    var regimentPromise1 = client.query(`UPDATE regiment
-                                                        SET power = $1, morale = $2
-                                                        WHERE game_id = $3
-                                                            AND front = $4
-                                                            AND is_friendly = $5
-                                                        RETURNING *;`, [updatedRegiments[1].power, updatedRegiments[1].morale, 
-                        updatedRegiments[1].game_id,updatedRegiments[1].front, updatedRegiments[1].is_friendly]);
+                    var regimentPromise1 = client.query(`WITH updated_regiment AS (
+                                                            UPDATE regiment
+                                                            SET power = $1, morale = $2, current_event_trigger = $3
+                                                            WHERE regiment_id = $4
+                                                            RETURNING regiment.*
+                                                        )
+                                                        SELECT * FROM game
+                                                        JOIN updated_regiment ON updated_regiment.game_id = game.game_id
+                                                        LEFT JOIN event ON event.trigger = updated_regiment.current_event_trigger
+                                                        LEFT JOIN message ON message.event_id = event.event_id;`, [updatedRegiments[1].power, 
+                                                        updatedRegiments[1].morale, updatedRegiments[1].current_event_trigger, 
+                                                        updatedRegiments[1].regiment_id]);
 
-                    var regimentPromise2 = client.query(`UPDATE regiment
-                                                        SET power = $1, morale = $2
-                                                        WHERE game_id = $3
-                                                            AND front = $4
-                                                            AND is_friendly = $5
-                                                        RETURNING *;`, [updatedRegiments[2].power, updatedRegiments[2].morale, 
-                        updatedRegiments[2].game_id,updatedRegiments[2].front, updatedRegiments[2].is_friendly]);
+                    var regimentPromise2 = client.query(`WITH updated_regiment AS (
+                                                            UPDATE regiment
+                                                            SET power = $1, morale = $2, current_event_trigger = $3
+                                                            WHERE regiment_id = $4
+                                                            RETURNING regiment.*
+                                                        )
+                                                        SELECT * FROM game
+                                                        JOIN updated_regiment ON updated_regiment.game_id = game.game_id
+                                                        LEFT JOIN event ON event.trigger = updated_regiment.current_event_trigger
+                                                        LEFT JOIN message ON message.event_id = event.event_id;`, [updatedRegiments[2].power, 
+                                                        updatedRegiments[2].morale, updatedRegiments[2].current_event_trigger, 
+                                                        updatedRegiments[2].regiment_id]);
 
-                    var regimentPromise3 = client.query(`UPDATE regiment
-                                                        SET power = $1, morale = $2
-                                                        WHERE game_id = $3
-                                                            AND front = $4
-                                                            AND is_friendly = $5
-                                                        RETURNING *;`, [updatedRegiments[3].power, updatedRegiments[3].morale, 
-                        updatedRegiments[3].game_id,updatedRegiments[3].front, updatedRegiments[3].is_friendly]);
+                    var regimentPromise3 = client.query(`WITH updated_regiment AS (
+                                                            UPDATE regiment
+                                                            SET power = $1, morale = $2, current_event_trigger = $3
+                                                            WHERE regiment_id = $4
+                                                            RETURNING regiment.*
+                                                        )
+                                                        SELECT * FROM game
+                                                        JOIN updated_regiment ON updated_regiment.game_id = game.game_id
+                                                        LEFT JOIN event ON event.trigger = updated_regiment.current_event_trigger
+                                                        LEFT JOIN message ON message.event_id = event.event_id;`, [updatedRegiments[3].power, 
+                                                        updatedRegiments[3].morale, updatedRegiments[3].current_event_trigger, 
+                                                        updatedRegiments[3].regiment_id]);
 
-                    var regimentPromise4 = client.query(`UPDATE regiment
-                                                        SET power = $1, morale = $2
-                                                        WHERE game_id = $3
-                                                            AND front = $4
-                                                            AND is_friendly = $5
-                                                        RETURNING *;`, [updatedRegiments[4].power, updatedRegiments[4].morale, 
-                        updatedRegiments[4].game_id,updatedRegiments[4].front, updatedRegiments[4].is_friendly]);
+                    var regimentPromise4 = client.query(`WITH updated_regiment AS (
+                                                            UPDATE regiment
+                                                            SET power = $1, morale = $2, current_event_trigger = $3
+                                                            WHERE regiment_id = $4
+                                                            RETURNING regiment.*
+                                                        )
+                                                        SELECT * FROM game
+                                                        JOIN updated_regiment ON updated_regiment.game_id = game.game_id
+                                                        LEFT JOIN event ON event.trigger = updated_regiment.current_event_trigger
+                                                        LEFT JOIN message ON message.event_id = event.event_id;`, [updatedRegiments[4].power, 
+                                                        updatedRegiments[4].morale, updatedRegiments[4].current_event_trigger, 
+                                                        updatedRegiments[4].regiment_id]);
 
-                    var regimentPromise5 = client.query(`UPDATE regiment
-                                                        SET power = $1, morale = $2
-                                                        WHERE game_id = $3
-                                                            AND front = $4
-                                                            AND is_friendly = $5
-                                                        RETURNING *;`, [updatedRegiments[5].power, updatedRegiments[5].morale, 
-                        updatedRegiments[5].game_id,updatedRegiments[5].front, updatedRegiments[5].is_friendly]);
+                    var regimentPromise5 = client.query(`WITH updated_regiment AS (
+                                                            UPDATE regiment
+                                                            SET power = $1, morale = $2, current_event_trigger = $3
+                                                            WHERE regiment_id = $4
+                                                            RETURNING regiment.*
+                                                        )
+                                                        SELECT * FROM game
+                                                        JOIN updated_regiment ON updated_regiment.game_id = game.game_id
+                                                        LEFT JOIN event ON event.trigger = updated_regiment.current_event_trigger
+                                                        LEFT JOIN message ON message.event_id = event.event_id;`, [updatedRegiments[5].power, 
+                                                        updatedRegiments[5].morale, updatedRegiments[5].current_event_trigger, 
+                                                        updatedRegiments[5].regiment_id]);
 
                     Promise.all([regimentPromise0, regimentPromise1, regimentPromise2, regimentPromise3, regimentPromise4, 
                         regimentPromise5]).then(function(resultOfAllPromises) {
-
                         console.log('result', resultOfAllPromises);
+
                         res.send(resultOfAllPromises);
                     }).catch(function(err){
                         console.log('Promise.all did not work!', err);
@@ -144,35 +171,70 @@ function combat(regimentArray) {
     var updatedRegiments = [];
 
     var clash = function(friendly, enemy) {
-        var friendlyDamageTaken = attackDamage(enemy.power) - attackDamage(friendly.power);
-        if (friendlyDamageTaken < 0) {
-            friendlyDamageTaken = 0;
-        }
-        friendlyDamageTaken += dice(4, 1);
-    
-        var enemyDamageTaken = attackDamage(friendly.power) - attackDamage(enemy.power);
-        if (enemyDamageTaken < 0) {
-            enemyDamageTaken = 0;
-        }
-        enemyDamageTaken += dice(4, 1);
-    
-        friendly.power -= friendlyDamageTaken;
-        friendly.morale -= friendlyDamageTaken;
-        enemy.power -= enemyDamageTaken;
-        enemy.morale -= enemyDamageTaken;
-
+        if (friendly.status === 'fighting') {
+            var friendlyDamageTaken = attackDamage(enemy.power) - attackDamage(friendly.power);
+            if (friendlyDamageTaken < 0) {
+                friendlyDamageTaken = 0;
+            }
+            friendlyDamageTaken += dice(4, 1);
         
-        if (friendly.power < 0) {
-            friendly.power = 0;
-        }
-        if (friendly.morale < 0) {
-            friendly.morale = 0;
-        }
-        if (enemy.power < 0) {
-            enemy.power = 0;
-        }
-        if (enemy.morale < 0) {
-            enemy.morale = 0;
+            var enemyDamageTaken = attackDamage(friendly.power) - attackDamage(enemy.power);
+            if (enemyDamageTaken < 0) {
+                enemyDamageTaken = 0;
+            }
+            enemyDamageTaken += dice(4, 1);
+        
+            friendly.power -= friendlyDamageTaken;
+            friendly.morale -= friendlyDamageTaken;
+            enemy.power -= enemyDamageTaken;
+            enemy.morale -= enemyDamageTaken;
+
+            
+            if (friendly.power < 0) {
+                friendly.power = 0;
+            }
+            if (friendly.morale < 0) {
+                friendly.morale = 0;
+            }
+            if (enemy.power < 0) {
+                enemy.power = 0;
+            }
+            if (enemy.morale < 0) {
+                enemy.morale = 0;
+            }
+
+            var event = function(friendly, enemy) {
+                if (friendly.power === 0 && enemy.power === 0) {
+                    friendly.status = 'destroyed';
+                    enemy.status = 'destroyed';
+                    friendly.current_event_trigger = 'mutual destruction';
+                } else if (friendly.power === 0) {
+                    friendly.status = 'destroyed';
+                    enemy.status = 'victorious';
+                    friendly.current_event_trigger = 'friendly destruction';
+                } else if (enemy.power === 0) {
+                    friendly.status = 'victorious';
+                    enemy.status = 'destroyed';
+                    friendly_status = 'victorious';
+                    friendly.current_event_trigger = 'enemy destruction';
+                } else if (friendly.morale === 0 && enemy.morale === 0) {
+                    friendly.status = 'broken';
+                    enemy.status = 'broken';
+                    friendly.current_event_trigger = 'mutual break';
+                } else if (friendly.morale === 0) {
+                    friendly.status = 'broken';
+                    enemy.status = 'victorious';
+                    friendly.current_event_trigger = 'friendly break';
+                } else if (enemy.morale === 0) {
+                    friendly.status = 'victorious';
+                    enemy.status = 'broken';
+                    friendly.current_event_trigger = 'enemy break';
+                } else {
+                    friendly.current_event_trigger = 'nothing';
+                }
+            }
+
+            event(friendly, enemy);
         }
 
         updatedRegiments.push(friendly);
@@ -204,9 +266,17 @@ function roundPlusOne(req, res) {
         console.log('error', errorConnectingToDatabase);
         res.sendStatus(500);
         } else {
-            client.query(`UPDATE game
-                        SET round=round+1
-                        WHERE game_id=1;`);
+            var userId = req.user.id;
+            client.query(`WITH last_game AS (
+                            SELECT game_id FROM game
+                            WHERE user_id = $1
+                            ORDER BY game_id DESC
+                            LIMIT 1
+                        )
+                        UPDATE game
+                        SET round = round + 1
+                        FROM last_game
+                        WHERE game.game_id = last_game.game_id;`, [userId]);
         }
     });
 }
