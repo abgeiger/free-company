@@ -1,4 +1,4 @@
-myApp.controller('BattleController', function(BattleService) {
+myApp.controller('BattleController', function(BattleService, UserService) {
     console.log('BattleController created');
     var bc = this;
 
