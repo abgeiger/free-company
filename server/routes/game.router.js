@@ -17,13 +17,14 @@ router.post('/new', function (req, res) {
                         )
                         INSERT INTO regiment (front, power, starting_power, morale, morale_ratio, is_friendly, faction_id, game_id)
                         SELECT regiment_template.front, regiment_template.power, regiment_template.starting_power, regiment_template.morale, regiment_template.morale_ratio, regiment_template.is_friendly, regiment_template.faction_id, new_game.game_id
-                        FROM regiment_template, new_game;`, [userId], function (errorMakingDatabaseQuery, result) {
+                        FROM regiment_template, new_game
+                        RETURNING *;`, [userId], function (errorMakingDatabaseQuery, result) {
                 done();
                 if (errorMakingDatabaseQuery) {
                 console.log('error', errorMakingDatabaseQuery);
                 res.sendStatus(500);
                 } else {
-                    res.sendStatus(201);
+                    res.send(result.rows);
                 }
             });
         }
@@ -60,8 +61,8 @@ function updateRegiments(req, res) {
 
                     var regimentPromise0 = client.query(`WITH updated_regiment AS (
                                                             UPDATE regiment
-                                                            SET power = $1, morale = $2, current_event_trigger = $3
-                                                            WHERE regiment_id = $4
+                                                            SET power = $1, morale = $2, current_event_trigger = $3, status = $4
+                                                            WHERE regiment_id = $5
                                                             RETURNING regiment.*
                                                         )
                                                         SELECT * FROM game
@@ -69,12 +70,12 @@ function updateRegiments(req, res) {
                                                         LEFT JOIN event ON event.trigger = updated_regiment.current_event_trigger
                                                         LEFT JOIN message ON message.event_id = event.event_id;`, [updatedRegiments[0].power, 
                                                         updatedRegiments[0].morale, updatedRegiments[0].current_event_trigger, 
-                                                        updatedRegiments[0].regiment_id]);
+                                                        updatedRegiments[0].status, updatedRegiments[0].regiment_id]);
 
                     var regimentPromise1 = client.query(`WITH updated_regiment AS (
                                                             UPDATE regiment
-                                                            SET power = $1, morale = $2, current_event_trigger = $3
-                                                            WHERE regiment_id = $4
+                                                            SET power = $1, morale = $2, current_event_trigger = $3, status = $4
+                                                            WHERE regiment_id = $5
                                                             RETURNING regiment.*
                                                         )
                                                         SELECT * FROM game
@@ -82,12 +83,12 @@ function updateRegiments(req, res) {
                                                         LEFT JOIN event ON event.trigger = updated_regiment.current_event_trigger
                                                         LEFT JOIN message ON message.event_id = event.event_id;`, [updatedRegiments[1].power, 
                                                         updatedRegiments[1].morale, updatedRegiments[1].current_event_trigger, 
-                                                        updatedRegiments[1].regiment_id]);
+                                                        updatedRegiments[1].status, updatedRegiments[1].regiment_id]);
 
                     var regimentPromise2 = client.query(`WITH updated_regiment AS (
                                                             UPDATE regiment
-                                                            SET power = $1, morale = $2, current_event_trigger = $3
-                                                            WHERE regiment_id = $4
+                                                            SET power = $1, morale = $2, current_event_trigger = $3, status = $4
+                                                            WHERE regiment_id = $5
                                                             RETURNING regiment.*
                                                         )
                                                         SELECT * FROM game
@@ -95,12 +96,12 @@ function updateRegiments(req, res) {
                                                         LEFT JOIN event ON event.trigger = updated_regiment.current_event_trigger
                                                         LEFT JOIN message ON message.event_id = event.event_id;`, [updatedRegiments[2].power, 
                                                         updatedRegiments[2].morale, updatedRegiments[2].current_event_trigger, 
-                                                        updatedRegiments[2].regiment_id]);
+                                                        updatedRegiments[2].status, updatedRegiments[2].regiment_id]);
 
                     var regimentPromise3 = client.query(`WITH updated_regiment AS (
                                                             UPDATE regiment
-                                                            SET power = $1, morale = $2, current_event_trigger = $3
-                                                            WHERE regiment_id = $4
+                                                            SET power = $1, morale = $2, current_event_trigger = $3, status = $4
+                                                            WHERE regiment_id = $5
                                                             RETURNING regiment.*
                                                         )
                                                         SELECT * FROM game
@@ -108,12 +109,12 @@ function updateRegiments(req, res) {
                                                         LEFT JOIN event ON event.trigger = updated_regiment.current_event_trigger
                                                         LEFT JOIN message ON message.event_id = event.event_id;`, [updatedRegiments[3].power, 
                                                         updatedRegiments[3].morale, updatedRegiments[3].current_event_trigger, 
-                                                        updatedRegiments[3].regiment_id]);
+                                                        updatedRegiments[3].status, updatedRegiments[3].regiment_id]);
 
                     var regimentPromise4 = client.query(`WITH updated_regiment AS (
                                                             UPDATE regiment
-                                                            SET power = $1, morale = $2, current_event_trigger = $3
-                                                            WHERE regiment_id = $4
+                                                            SET power = $1, morale = $2, current_event_trigger = $3, status = $4
+                                                            WHERE regiment_id = $5
                                                             RETURNING regiment.*
                                                         )
                                                         SELECT * FROM game
@@ -121,12 +122,12 @@ function updateRegiments(req, res) {
                                                         LEFT JOIN event ON event.trigger = updated_regiment.current_event_trigger
                                                         LEFT JOIN message ON message.event_id = event.event_id;`, [updatedRegiments[4].power, 
                                                         updatedRegiments[4].morale, updatedRegiments[4].current_event_trigger, 
-                                                        updatedRegiments[4].regiment_id]);
+                                                        updatedRegiments[4].status, updatedRegiments[4].regiment_id]);
 
                     var regimentPromise5 = client.query(`WITH updated_regiment AS (
                                                             UPDATE regiment
-                                                            SET power = $1, morale = $2, current_event_trigger = $3
-                                                            WHERE regiment_id = $4
+                                                            SET power = $1, morale = $2, current_event_trigger = $3, status = $4
+                                                            WHERE regiment_id = $5
                                                             RETURNING regiment.*
                                                         )
                                                         SELECT * FROM game
@@ -134,7 +135,7 @@ function updateRegiments(req, res) {
                                                         LEFT JOIN event ON event.trigger = updated_regiment.current_event_trigger
                                                         LEFT JOIN message ON message.event_id = event.event_id;`, [updatedRegiments[5].power, 
                                                         updatedRegiments[5].morale, updatedRegiments[5].current_event_trigger, 
-                                                        updatedRegiments[5].regiment_id]);
+                                                        updatedRegiments[5].status, updatedRegiments[5].regiment_id]);
 
                     Promise.all([regimentPromise0, regimentPromise1, regimentPromise2, regimentPromise3, regimentPromise4, 
                         regimentPromise5]).then(function(resultOfAllPromises) {

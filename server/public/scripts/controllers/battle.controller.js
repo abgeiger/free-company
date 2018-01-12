@@ -6,8 +6,9 @@ myApp.controller('BattleController', function(BattleService) {
     bc.messages = BattleService.messages;
 
     bc.newGame = BattleService.newGame;
+    bc.nextRound = BattleService.nextRound;
 
-    // bc.newGame();
+    bc.newGame();
 
     bc.data = BattleService.data;
   });
