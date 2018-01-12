@@ -90,7 +90,14 @@ li a:hover {
 }
 
 .page-background {
+  color: white;
   background-color: #BD9F72;
   height: 2000px;
   padding: 50px;
+}
+
+.next-turn {
+  color: white;
+  background-color: #8B6A37;
+  float: right;
 }
