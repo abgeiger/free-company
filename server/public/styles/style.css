@@ -1,8 +1,9 @@
 body, html {
   margin: 0;
   padding: 0;
-  font-family: sans-serif;
+  font-family: serif;
   font-size: 14px;
+  background-color: #8B6A37;
 }
 
 .instructions .container h1 {
@@ -82,22 +83,38 @@ li a:hover {
 
 /* Drew started here */
 
-.front {
-  background-color: #8B6A37;
-  height: 100px;
+.inset-div {
+  background-color: #BD9F72;
+  min-height: 100px;
   margin: 5px;
   border-radius: 5px;
+  color: #FEFBF7;
+
+  -moz-box-shadow:    inset 0 0 10px #000000;
+   -webkit-box-shadow: inset 0 0 10px #000000;
+   box-shadow:         inset 0 0 10px #000000;
 }
 
-.page-background {
-  color: white;
-  background-color: #BD9F72;
-  height: 2000px;
-  padding: 50px;
-}
-
-.next-turn {
+/* .page-background {
   color: white;
   background-color: #8B6A37;
+  height: 2000px;
+  padding: 50px;
+} */
+
+.next-turn {
+  background-color: #BD9F72;
   float: right;
+  color: #FEFBF7;
+
+  -moz-box-shadow:    inset 0 0 10px #000000;
+   -webkit-box-shadow: inset 0 0 10px #000000;
+   box-shadow:         inset 0 0 10px #000000;
+}
+
+.parchment {
+  margin: 5px;
+  background-image: url(images/parchment.png);
+  background-size: 100% 100%;
+  color: #404040;
 }

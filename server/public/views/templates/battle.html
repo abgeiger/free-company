@@ -1,7 +1,7 @@
-<div class="container-fluid page-background">
+<div class="container page-background">
     <div class="row">
         <div class="col-sm-4" ng-repeat="enemy in bc.regiments.enemy">
-            <div class="container-fluid front">
+            <div class="container-fluid inset-div">
                 <div class="row">
                     <div class="col-xs-12">
                         <span>Enemy</span>
@@ -15,12 +15,17 @@
                         <span>Morale: {{enemy.morale}}</span>
                     </div>
                 </div>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <span>Status: {{enemy.status}}</span>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
     <div class="row">
         <div class="col-sm-4" ng-repeat="friendly in bc.regiments.friendly">
-            <div class="container-fluid front">
+            <div class="container-fluid inset-div">
                 <div class="row">
                     <div class="col-xs-12">
                         <span>Friendly</span>
@@ -34,12 +39,22 @@
                         <span>Morale: {{friendly.morale}}</span>
                     </div>
                 </div>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <span>Status: {{friendly.status}}</span>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
     <div class="row">
-        <div class="col-xs-12 front">
-            <p ng-repeat="message in bc.messages.list">{{message}}</p>
+        <div class="col-xs-12 inset-div">
+            <div class="col-sm-6 parchment" ng-repeat="message in bc.messages.list">
+                <p>{{message}}</p>
+                <!-- <div class="parchment">
+                    <p>{{message}}</p>
+                </div> -->
+            </div>
         </div>
     </div>
     <div class="row">
