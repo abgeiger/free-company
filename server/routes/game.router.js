@@ -183,24 +183,36 @@ function combat(regimentArray) {
     var updatedRegiments = [];
 
     var clash = function(friendly, enemy) {
-        if (friendly.status === 'fighting') {
+        if (friendly.status === 'attacking' || friendly.status === 'defending') {
             var friendlyDamageTaken = attackDamage(enemy.power) - attackDamage(friendly.power);
             if (friendlyDamageTaken < 0) {
                 friendlyDamageTaken = 0;
             }
-            friendlyDamageTaken += dice(4, 1);
+            if (friendly.status === 'attacking') {
+                friendlyDamageTaken += dice(enemy.attack_dice_sides, enemy.number_of_attack_dice);
+            } else {
+                friendlyDamageTaken += dice(enemy.attack_dice_sides, enemy.number_of_attack_dice) - dice(friendly.defense_dice_sides, friendly.number_of_defense_dice);
+            }
         
             var enemyDamageTaken = attackDamage(friendly.power) - attackDamage(enemy.power);
             if (enemyDamageTaken < 0) {
                 enemyDamageTaken = 0;
             }
-            enemyDamageTaken += dice(4, 1);
-        
-            friendly.power -= friendlyDamageTaken;
-            friendly.morale -= friendlyDamageTaken;
-            enemy.power -= enemyDamageTaken;
-            enemy.morale -= enemyDamageTaken;
-
+            if (friendly.status === 'attacking') {
+                enemyDamageTaken += dice(friendly.attack_dice_sides, friendly.number_of_attack_dice);
+            } else {
+                enemyDamageTaken += defendingDamage(dice(friendly.attack_dice_sides, friendly.number_of_attack_dice));
+            }
+            
+            // if damage isn't negative, regiment take damamge to power and morale
+            if (friendlyDamageTaken > 0) {
+                friendly.power -= friendlyDamageTaken;
+                friendly.morale -= friendlyDamageTaken;
+            }
+            if (enemyDamageTaken > 0) {
+                enemy.power -= enemyDamageTaken;
+                enemy.morale -= enemyDamageTaken;
+            }
             
             if (friendly.power < 0) {
                 friendly.power = 0;
@@ -270,6 +282,10 @@ function dice(numberOfSides, numberOfDice) {
         result += Math.floor(Math.random() * (numberOfSides) + 1);
     }
     return result;
+}
+
+function defendingDamage(damage) {
+    return Math.floor(damage / 2);
 }
 
 function roundPlusOne(req, res) {
