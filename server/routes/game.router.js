@@ -36,7 +36,28 @@ router.post('/new', function (req, res) {
     }); // end add new game
 });
 
-router.get('/nextRound', function (req, res) {
+router.get('/decisions', function (req, res) {
+    pool.connect(function (errorConnectingToDatabase, client, done) {
+        if (errorConnectingToDatabase) {
+        console.log('error', errorConnectingToDatabase);
+        res.sendStatus(500);
+        } else {
+            client.query(`SELECT * FROM decision
+                        WHERE (on_start = true)
+                        AND (unlimited = true OR uses > 0);`, function (errorMakingDatabaseQuery, result) {
+                done();
+                if (errorMakingDatabaseQuery) {
+                console.log('error', errorMakingDatabaseQuery);
+                res.sendStatus(500);
+                } else {
+                    res.send(result.rows);
+                }
+            });
+        }
+    }); // end add new game
+});
+
+router.post('/nextRound', function (req, res) {
     roundPlusOne(req, res);
     updateRegiments(req, res);
 }); // end nextRound()
@@ -63,7 +84,13 @@ function updateRegiments(req, res) {
                     res.sendStatus(500);
                     } else {
                         var originalRegiments = result.rows;
-                        var updatedRegiments = combat(originalRegiments);
+                        if (req.body) {
+                            var decision = req.body;
+                            var updatedRegiments = combat(originalRegiments, decision);
+                        } else {
+                            var updatedRegiments = combat(originalRegiments);
+                        }
+                        
 
                         var regimentPromise0 = client.query(`WITH updated_regiment AS (
                                                                 UPDATE regiment
@@ -163,7 +190,7 @@ function updateRegiments(req, res) {
     }); // end regiment get request
 }
 
-function combat(regimentArray) {
+function combat(regimentArray, decision) {
     for (var i = 0; i < regimentArray.length; i++) {
         if (regimentArray[i].is_friendly === true && regimentArray[i].front === 'left') {
             var leftRegiment = regimentArray[i];
@@ -177,6 +204,18 @@ function combat(regimentArray) {
             var centerRegimentEnemy = regimentArray[i];
         } else if (regimentArray[i].is_friendly === false && regimentArray[i].front === 'right') {
             var rightRegimentEnemy = regimentArray[i];
+        }
+    }
+
+    if (decision) {
+        if (decision.type === 'defending' || decision.type === 'attacking') {
+            if (decision.front === 'left') {
+                leftRegiment.status = decision.type;
+            } else if (decision.front === 'center') {
+                centerRegiment.status = decision.type;
+            } else if (decision.front === 'right') {
+                rightRegiment.status = decision.type;
+            }
         }
     }
 
@@ -253,6 +292,10 @@ function combat(regimentArray) {
                     friendly.status = 'victorious';
                     enemy.status = 'broken';
                     friendly.current_event_trigger = 'enemy break';
+                // } else if (friendly.morale === friendly.) {
+                //     friendly.status = 'broken';
+                //     enemy.status = 'victorious';
+                //     friendly.current_event_trigger = 'friendly break';
                 } else {
                     friendly.current_event_trigger = 'nothing';
                 }

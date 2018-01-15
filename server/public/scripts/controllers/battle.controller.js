@@ -4,6 +4,7 @@ myApp.controller('BattleController', function(BattleService, UserService) {
 
     bc.regiments = BattleService.regiments;
     bc.messages = BattleService.messages;
+    bc.decisions = BattleService.decisions;
 
     bc.newGame = BattleService.newGame;
     bc.nextRound = BattleService.nextRound;

@@ -51,9 +51,14 @@
         <div class="col-xs-12 inset-div">
             <div class="col-sm-6 parchment" ng-repeat="message in bc.messages.list">
                 <p>{{message}}</p>
-                <!-- <div class="parchment">
-                    <p>{{message}}</p>
-                </div> -->
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12 inset-div">
+            <div class="col-sm-6 parchment" ng-repeat="decision in bc.decisions.list" ng-click="bc.decisions.current = decision">
+                <p ng-show="decision == bc.decisions.current">Outgoing: </p>
+                <p>{{decision.name}}</p>
             </div>
         </div>
     </div>
