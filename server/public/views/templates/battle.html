@@ -1,3 +1,4 @@
+<!-- <iframe width="0" height="0" src="https://www.youtube.com/embed/cm9BOpj1nd4?rel=0&amp;controls=0&amp;showinfo=0&loop=1&autoplay=1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe> -->
 <div class="container page-background">
     <div class="row">
         <div class="col-sm-4" ng-repeat="enemy in bc.regiments.enemy">
@@ -49,7 +50,7 @@
     </div>
     <div class="row">
         <div class="col-xs-12 inset-div">
-            <div class="col-sm-6 parchment" ng-repeat="message in bc.messages.list">
+            <div class="col-sm-6 parchment" ng-repeat="message in bc.messages.list track by $index">
                 <p>{{message}}</p>
             </div>
         </div>
