@@ -242,6 +242,12 @@ function combat(regimentArray, decision) {
             } else {
                 enemyDamageTaken += defendingDamage(dice(friendly.attack_dice_sides, friendly.number_of_attack_dice));
             }
+
+            if (decision) {
+                if (decision.type === 'charge' && decision.front === friendly.front) {
+                    enemyDamageTaken += decision.value;
+                }
+            }
             
             // if damage isn't negative, regiment take damamge to power and morale
             if (friendlyDamageTaken > 0) {
