@@ -1,8 +1,51 @@
-<!-- <iframe width="0" height="0" src="https://www.youtube.com/embed/cm9BOpj1nd4?rel=0&amp;controls=0&amp;showinfo=0&loop=1&autoplay=1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe> -->
+<div ng-include="'views/partials/nav.html'"></div>
+<iframe width="0" height="0" src="https://www.youtube.com/embed/cm9BOpj1nd4?rel=0&amp;controls=0&amp;showinfo=0&loop=1&autoplay=1"
+    frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
 <div class="container page-background">
     <div class="row">
-        <div class="col-sm-4" ng-repeat="enemy in bc.regiments.enemy">
-            <div class="container-fluid inset-div">
+        <div class="col-xs-4">
+            <div class="front-title-div inset-div">
+                <h3>Left Front</h3>
+                <div class="row">
+                    <div class="col-xs-6">
+                        <span>Power</span>
+                    </div>
+                    <div class="col-xs-6">
+                        <span>Morale</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-4">
+            <div class="front-title-div inset-div">
+                <h3>Center Front</h3>
+                <div class="row">
+                    <div class="col-xs-6">
+                        <span>Power</span>
+                    </div>
+                    <div class="col-xs-6">
+                        <span>Morale</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-4">
+            <div class="front-title-div inset-div">
+                <h3>Right Front</h3>
+                <div class="row">
+                    <div class="col-xs-6">
+                        <span>Power</span>
+                    </div>
+                    <div class="col-xs-6">
+                        <span>Morale</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-4" ng-repeat="enemy in bc.regiments.enemy">
+            <div class="container-fluid inset-div enemy front-div">
                 <div class="row">
                     <div class="col-xs-12">
                         <span>Enemy</span>
@@ -10,23 +53,23 @@
                 </div>
                 <div class="row">
                     <div class="col-xs-6">
-                        <span>Power: {{enemy.power}}</span>
+                        <span>{{enemy.power}}</span>
                     </div>
                     <div class="col-xs-6">
-                        <span>Morale: {{enemy.morale}}</span>
+                        <span>{{enemy.morale}}</span>
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-xs-12">
-                        <span>Status: {{enemy.status}}</span>
+                    <div class="col-xs-12 status">
+                        <span>{{enemy.status}}</span>
                     </div>
                 </div>
             </div>
         </div>
     </div>
     <div class="row">
-        <div class="col-sm-4" ng-repeat="friendly in bc.regiments.friendly">
-            <div class="container-fluid inset-div">
+        <div class="col-xs-4" ng-repeat="friendly in bc.regiments.friendly">
+            <div class="container-fluid inset-div friendly front-div">
                 <div class="row">
                     <div class="col-xs-12">
                         <span>Friendly</span>
@@ -34,37 +77,47 @@
                 </div>
                 <div class="row">
                     <div class="col-xs-6">
-                        <span>Power: {{friendly.power}}</span>
+                        <span>{{friendly.power}}</span>
                     </div>
                     <div class="col-xs-6">
-                        <span>Morale: {{friendly.morale}}</span>
+                        <span>{{friendly.morale}}</span>
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-xs-12">
-                        <span>Status: {{friendly.status}}</span>
+                    <div class="col-xs-12 status">
+                        <span>{{friendly.status}}</span>
                     </div>
                 </div>
-            </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-xs-12 inset-div">
-            <div class="col-sm-6 parchment" ng-repeat="message in bc.messages.list track by $index">
-                <p>{{message}}</p>
-            </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-xs-12 inset-div">
-            <div class="col-sm-6 parchment" ng-repeat="decision in bc.decisions.list" ng-click="bc.decisions.current = decision">
-                <p ng-show="decision == bc.decisions.current">Outgoing: </p>
-                <p>{{decision.name}}</p>
             </div>
         </div>
     </div>
     <div class="row">
         <div class="col-xs-12">
+            <div class="container-fluid inset-div pad-parchments">
+                <div class="col-xs-12">
+                    <h4>Messages</h4>
+                </div>
+                <div class="col-sm-6 parchment" ng-repeat="message in bc.messages.list track by $index">
+                    <p>{{message}}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="container-fluid inset-div pad-parchments">
+                <div class="col-xs-12">
+                    <h4>Decisions</h4>
+                </div>
+                <div class="col-sm-5 parchment" ng-repeat="decision in bc.decisions.list" ng-click="bc.decisions.current = decision">
+                    <p ng-show="decision == bc.decisions.current">Outgoing: </p>
+                    <p>{{decision.name}}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="container-fluid col-xs-12 button-div">
             <button class="btn next-turn" ng-click="bc.nextRound()">Next Round</button>
         </div>
     </div>

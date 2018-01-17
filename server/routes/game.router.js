@@ -298,10 +298,6 @@ function combat(regimentArray, decision) {
                     friendly.status = 'victorious';
                     enemy.status = 'broken';
                     friendly.current_event_trigger = 'enemy break';
-                // } else if (friendly.morale === friendly.) {
-                //     friendly.status = 'broken';
-                //     enemy.status = 'victorious';
-                //     friendly.current_event_trigger = 'friendly break';
                 } else {
                     friendly.current_event_trigger = 'nothing';
                 }
