@@ -148,7 +148,7 @@ myApp.service('BattleService', function ($http, $location) {
     
 
     if (frontsLost > 1) {
-      self.messages.list.push('Our forces have broken and run like little girls! The enemy is victorious.');
+      self.messages.list.push('Our forces have broken and run like little babymen! The enemy is victorious.');
 
       self.end.lost = true;
       console.log('self.end:', self.end);
