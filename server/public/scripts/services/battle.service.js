@@ -5,6 +5,7 @@ myApp.service('BattleService', function ($http, $location) {
   self.regiments = { friendly: [], enemy: [] };
   self.messages = { list: [] };
   self.decisions = { list: [], current: '' };
+  self.end = { won: false, lost: false }
 
   self.getDecisions = function () {
     $http({
@@ -83,6 +84,8 @@ myApp.service('BattleService', function ($http, $location) {
           }
         }
         self.messages.list = newMessages;
+
+        self.gameOver(self.regiments.friendly, self.regiments.enemy);
   
         self.getDecisions();
       });
@@ -116,10 +119,59 @@ myApp.service('BattleService', function ($http, $location) {
           }
         }
         self.messages.list = newMessages;
+
+        self.gameOver(self.regiments.friendly, self.regiments.enemy);
   
         self.getDecisions();
       });
     }
-    
   };
+
+  self.gameOver = function(friendly, enemy) {
+    console.log('regiments:', self.regiments);
+    
+
+    var frontsLost = 0;
+    var frontsWon = 0;
+    var frontsTied = 0;
+
+    for (var i = 0; i < friendly.length; i++) {
+      if (enemy[i].status === 'victorious') {
+        frontsLost++;
+      } else if (friendly[i].status === 'victorious') {
+        frontsWon++;
+      } else if (friendly[i].status === 'broken' || friendly[i].status === 'destroyed') {
+        frontsTied++;
+      }
+    }
+    console.log('won, lost, tied:', frontsWon, frontsLost, frontsTied);
+    
+
+    if (frontsLost > 1) {
+      self.messages.list.push('Our forces have broken and run like little girls! The enemy is victorious.');
+
+      self.end.lost = true;
+      console.log('self.end:', self.end);
+    } else if (frontsWon > 1) {
+      self.messages.list.push('We have pushed the enemy back! The day is ours!');
+
+      self.end.won = true;
+      console.log('self.end:', self.end);
+    } else if (frontsLost + frontsTied === 3) {
+      self.messages.list.push('Our men faught bravely, but the enemy has broken through.');
+
+      self.end.lost = true;
+      console.log('self.end:', self.end);
+    } else if (frontsWon + frontsTied === 3) {
+      self.messages.list.push('We took heavy casualties, but we have prevailed! Good show, General!');
+
+      self.end.won = true;
+      console.log('self.end:', self.end);
+    } else if (frontsWon === 1 && frontsTied === 1 && frontsLost === 1) {
+      self.messages.list.push('The day has ended in a draw. We must prepair for a long campaign.');
+
+      self.end.won = true;
+      console.log('self.end:', self.end);
+    }
+  }
 });
