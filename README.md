@@ -1,6 +1,6 @@
 # Free Company
 
-One Paragraph of project description goes here. Link to the live version of the app if it's hosted on Heroku.
+Free Company is my solo capstone project at Prime Digital Academy. It is a text-based strategy game hosted on a web app.
 
 ## Built With
 
